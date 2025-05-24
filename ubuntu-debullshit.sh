@@ -57,216 +57,120 @@ gsettings_wrapper() {
     sudo -Hu $(logname) dbus-launch gsettings "$@"
 }
 
-set_fonts() {
-	gsettings_wrapper set org.gnome.desktop.interface monospace-font-name "Monospace 10"
+adjust_settings() {
+    # Binds
+    gsettings_wrapper set org.gnome.shell.keybindings switch-to-application-1 []
+    gsettings_wrapper set org.gnome.shell.keybindings switch-to-application-2 []
+    gsettings_wrapper set org.gnome.shell.keybindings switch-to-application-3 []
+    gsettings_wrapper set org.gnome.shell.keybindings switch-to-application-4 []
+    gsettings_wrapper set org.gnome.shell.keybindings toggle-message-tray []
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings switch-input-source "[]"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings switch-input-source-backward "[]"
+
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings switch-to-workspace-1 "['<Super>1']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings switch-to-workspace-2 "['<Super>2']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings switch-to-workspace-3 "['<Super>3']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings switch-to-workspace-4 "['<Super>4']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings switch-to-workspace-5 "['<Super>5']"
+
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Shift><Super>1']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Shift><Super>2']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Shift><Super>3']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Shift><Super>4']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings move-to-workspace-5 "['<Shift><Super>5']"
+
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings show-desktop "['<Super>d']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings close "['<Super>q']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings maximize "['<Super>f']"
+    gsettings_wrapper set org.gnome.desktop.wm.keybindings unmaximize "['<Super>t']"
+
+    gsettings_wrapper set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding '<Super>Return'
+    gsettings_wrapper set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'alacritty'
+    gsettings_wrapper set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'open terminal'
+
+    gsettings_wrapper set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ binding '<Super>e'
+    gsettings_wrapper set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ command 'nautilus -w /hdd'
+    gsettings_wrapper set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ name 'open file manager'
+
+    # Preferences
+    gsettings_wrapper set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+    gsettings_wrapper set org.gnome.desktop.wm.preferences focus-mode 'sloppy'
+    gsettings_wrapper set org.gnome.desktop.wm.preferences num-workspaces 5
+
+    gsettings_wrapper set org.gnome.desktop.interface clock-show-weekday true
+    gsettings_wrapper set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings_wrapper set org.gnome.desktop.interface enable-hot-corners false
+    gsettings_wrapper set org.gnome.desktop.interface gtk-enable-primary-paste false
+
+    gsettings_wrapper set org.gnome.desktop.sound event-sounds false
+    gsettings_wrapper set org.gnome.desktop.sound theme-name '__custom'
+
+    gsettings_wrapper set org.gnome.shell enabled-extensions "['ubuntu-appindicators@ubuntu.com']"
 }
 
-setup_vanilla_gnome() {
-    apt install qgnomeplatform-qt5 -y
-    apt install qgnomeplatform-qt6 -y
-    apt install gnome-session fonts-cantarell adwaita-icon-theme gnome-backgrounds gnome-tweaks vanilla-gnome-default-settings gnome-shell-extension-manager -y && apt remove ubuntu-session yaru-theme-gnome-shell yaru-theme-gtk yaru-theme-icon yaru-theme-sound -y
-    set_fonts
-    restore_background
+personal_things() {
+    # Mount points
+    mkdir /hdd
+    mkdir /sata
+
+    apt remove gnome-clocks -y
+    apt remove gnome-characters -y
+    apt remove gnome-calendar -y
+    apt remove gnome-font-viewer -y
+    apt remove gnome-system-monitor -y
+    apt remove gnome-snapshot -y
+    apt remove totem -y
+    apt remove simple-scan -y
+    apt remove gnome-logs -y
+
+    apt install curl -y
+    apt install fastfetch -y
+    apt install alacritty -y
+    apt install gh -y
+    apt install vlc -y
+    apt install obs-studio -y
+    apt install dconf-editor -y
+    apt install htop -y
+    apt install gnome-tweaks -y
+
+    flatpak install flathub com.belmoussaoui.Authenticator --noninteractive
+    flatpak install flathub com.bitwarden.desktop --noninteractive
+    flatpak install flathub it.mijorus.gearlever --noninteractive
+    flatpak install flathub com.discordapp.Discord --noninteractive
+    flatpak install flathub com.rtosta.zapzap --noninteractive
+    flatpak install flathub org.gnome.Todo --noninteractive
+    flatpak install flathub de.haeckerfelix.Fragments --noninteractive
+    flatpak install flathub io.missioncenter.MissionCenter --noninteractive
+    flatpak install flathub com.mattjakeman.ExtensionManager --noninteractive
+
+    curl -fsS https://dl.brave.com/install.sh | sh
+    curl -f https://zed.dev/install.sh | sh
+
+    bash <(curl -sSL https://spotx-official.github.io/run.sh) --installdeb
+
+    echo 'fastfetch' >> ~/.bashrc
+    echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc
 }
 
-restore_background() {
-    gsettings_wrapper set org.gnome.desktop.background picture-uri 'file:///usr/share/backgrounds/gnome/blobs-l.svg'
-    gsettings_wrapper set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/backgrounds/gnome/blobs-l.svg'
-}
-
-install_adwgtk3() {    
-    wget -O /tmp/adw-gtk3.tar.xz https://github.com/lassekongo83/adw-gtk3/releases/download/v5.10/adw-gtk3v5.10.tar.xz
-    tar -xf /tmp/adw-gtk3.tar.xz -C /usr/share/themes/
-    if command -v flatpak; then
-        flatpak install -y runtime/org.gtk.Gtk3theme.adw-gtk3-dark
-        flatpak install -y runtime/org.gtk.Gtk3theme.adw-gtk3
-    fi
-    if [ "$(gsettings_wrapper get org.gnome.desktop.interface color-scheme | tail -n 1)" == ''\''prefer-dark'\''' ]; then
-        gsettings_wrapper set org.gnome.desktop.interface gtk-theme adw-gtk3-dark
-        gsettings_wrapper set org.gnome.desktop.interface color-scheme prefer-dark
-    else
-        gsettings_wrapper set org.gnome.desktop.interface gtk-theme adw-gtk3
-    fi
-}
-
-install_icons() {
-    apt install adwaita-icon-theme -y
-    apt install git -y
-    git clone https://github.com/somepaulo/MoreWaita.git /tmp/MoreWaita
-    /tmp/MoreWaita/install.sh
-    apt install adwaita-icon-theme -y
-    gsettings_wrapper set org.gnome.desktop.interface icon-theme MoreWaita
-    gsettings_wrapper set org.gnome.desktop.interface accent-color blue
-}
-
-restore_firefox() {
-    wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- > /etc/apt/keyrings/packages.mozilla.org.asc
-    echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" > /etc/apt/sources.list.d/mozilla.list 
-    echo '
-Package: *
-Pin: origin packages.mozilla.org
-Pin-Priority: 1000
-' > /etc/apt/preferences.d/mozilla
-    apt update
-    apt install firefox -y
-}
-
-ask_reboot() {
-    echo 'Reboot now? (y/n)'
-    while true; do
-        read choice
-        if [[ "$choice" == 'y' || "$choice" == 'Y' ]]; then
-            reboot
-            exit 0
-        fi
-        if [[ "$choice" == 'n' || "$choice" == 'N' ]]; then
-            break
-        fi
-    done
-}
-
-msg() {
-    tput setaf 2
-    echo "[*] $1"
-    tput sgr0
-}
-
-error_msg() {
-    tput setaf 1
-    echo "[!] $1"
-    tput sgr0
-}
-
-check_root_user() {
+main() {
     if [ "$(id -u)" != 0 ]; then
         echo 'Please run the script as root!'
         echo 'We need to do administrative tasks'
         exit
     fi
-}
 
-enable_appindicator() {
-    gsettings_wrapper set org.gnome.shell enabled-extensions "['ubuntu-appindicators@ubuntu.com']"
-}
-
-print_banner() {
-    echo '                                                                                                                                   
-    ▐            ▗            ▐     ▐       ▝▜  ▝▜      ▐    ▝   ▗   ▗  
-▗ ▗ ▐▄▖ ▗ ▗ ▗▗▖ ▗▟▄ ▗ ▗      ▄▟  ▄▖ ▐▄▖ ▗ ▗  ▐   ▐   ▄▖ ▐▗▖ ▗▄  ▗▟▄  ▐  
-▐ ▐ ▐▘▜ ▐ ▐ ▐▘▐  ▐  ▐ ▐     ▐▘▜ ▐▘▐ ▐▘▜ ▐ ▐  ▐   ▐  ▐ ▝ ▐▘▐  ▐   ▐   ▐  
-▐ ▐ ▐ ▐ ▐ ▐ ▐ ▐  ▐  ▐ ▐  ▀▘ ▐ ▐ ▐▀▀ ▐ ▐ ▐ ▐  ▐   ▐   ▀▚ ▐ ▐  ▐   ▐   ▝  
-▝▄▜ ▐▙▛ ▝▄▜ ▐ ▐  ▝▄ ▝▄▜     ▝▙█ ▝▙▞ ▐▙▛ ▝▄▜  ▝▄  ▝▄ ▝▄▞ ▐ ▐ ▗▟▄  ▝▄  ▐  
-                                                                                                      
- By @polkaulfield
- '
-}
-
-show_menu() {
-    echo 'Choose what to do: '
-    echo '1 - Apply everything (RECOMMENDED)'
-    echo '2 - Disable Ubuntu report'
-    echo '3 - Remove app crash popup'
-    echo '4 - Remove snaps and snapd'
-    echo '5 - Disable terminal ads (LTS versions)'
-    echo '6 - Install flathub and gnome-software'
-    echo '7 - Install firefox from the Mozilla repo'
-    echo '8 - Install vanilla GNOME session'
-    echo '9 - Install adw-gtk3 and morewaita'
-    echo 'q - Exit'
-    echo
-}
-
-main() {
-    check_root_user
-    while true; do
-        print_banner
-        show_menu
-        read -p 'Enter your choice: ' choice
-        case $choice in
-        1)
-            auto
-            msg 'Done!'
-            ask_reboot
-            ;;
-        2)
-            disable_ubuntu_report
-            msg 'Done!'
-            ;;
-        3)
-            remove_appcrash_popup
-            msg 'Done!'
-            ;;
-        4)
-            remove_snaps
-            msg 'Done!'
-            ask_reboot
-            ;;
-        5)
-            disable_terminal_ads
-            msg 'Done!'
-            ;;
-        6)
-            update_system
-            setup_flathub
-            msg 'Done!'
-            ask_reboot
-            ;;
-        7)
-            restore_firefox
-            msg 'Done!'
-            ;;
-        8)
-            update_system
-            setup_vanilla_gnome
-	    enable_appindicator
-            msg 'Done!'
-            ask_reboot
-            ;;
-
-        9)
-            update_system
-            install_adwgtk3
-            install_icons
-            msg 'Done!'
-            ask_reboot
-            ;;
-
-        q)
-            exit 0
-            ;;
-
-        *)
-            error_msg 'Wrong input!'
-            ;;
-        esac
-    done
-
-}
-
-auto() {
-    msg 'Updating system'
     update_system
-    msg 'Disabling ubuntu report'
     disable_ubuntu_report
-    msg 'Removing annoying appcrash popup'
     remove_appcrash_popup
-    msg 'Removing terminal ads (if they are enabled)'
     disable_terminal_ads
-    msg 'Deleting everything snap related'
     remove_snaps
-    msg 'Setting up flathub'
     setup_flathub
-    msg 'Restoring Firefox from mozilla repository'
-    restore_firefox
-    msg 'Installing vanilla Gnome session'
-    setup_vanilla_gnome
-    enable_appindicator
-    msg 'Install adw-gtk3'
-    install_adwgtk3
-    msg 'Installing MoreWaita icons'
-    install_icons
-    msg 'Cleaning up'
+    personal_things
+    adjust_settings
     cleanup
+
+    reboot
+    exit 0
 }
 
-(return 2> /dev/null) || main
+main
